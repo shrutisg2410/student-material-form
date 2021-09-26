@@ -1,0 +1,154 @@
+<mat-toolbar color="primary">
+<span>Student CRUD</span>
+</mat-toolbar>
+
+<div class="container">
+<h3 mat-dialog-title>Add new Issue</h3>
+
+<form class="mat-dialog-content" (ngSubmit)="submit" #formControl="ngForm">
+
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput #input class="form-control" placeholder="Id" [(ngModel)]="data.id" name="id" required >
+      <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <!--Textarea for demo purposes-->
+  <div class="form">
+    <mat-form-field color="accent">
+      <textarea matInput #input class="form-control" placeholder="Title" [(ngModel)]="data.title" name="title" required ></textarea>
+      <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <!--Contains mat-hint for characters count and has maxLengt set-->
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput #inputstate class="form-control" placeholder="State" [(ngModel)]="data.state" name="state" maxlength="10" required >
+      <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+      <mat-hint align="end">{{inputstate.value?.length || 0}}/10</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput placeholder="Url" [(ngModel)]="data.url" name="url">
+    </mat-form-field>
+  </div>
+
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput placeholder="Created at" [(ngModel)]="data.created_at" name="created_at">
+    </mat-form-field>
+  </div>
+
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput placeholder="Updated at" [(ngModel)]="data.updated_at" name="updated_at">
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-button [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1" (click)="confirmAdd()">Save</button>
+    <button mat-button tabindex="-1">Cancel</button>
+  </div>
+</form>
+</div>
+
+
+<div class="container mat-elevation-z8">
+
+<mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+  ng update @angular/cli @angular/core
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ row.id }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>name</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{ row.name }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="state">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>State</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{ row.state }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="created_at">
+    <mat-header-cell *matHeaderCellDef mat-sort-header
+      >Created at</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row"> {{ row.created_at }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="updated_at">
+    <mat-header-cell *matHeaderCellDef mat-sort-header
+      >Updated at</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row"> {{ row.updated_at }}</mat-cell>
+  </ng-container>
+
+  <!-- actions -->
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>
+      <button mat-icon-button color="primary">
+        <mat-icon aria-label="Example icon-button with a heart icon"
+          >add</mat-icon
+        >
+      </button>
+    </mat-header-cell>
+
+    <mat-cell *matCellDef="let row; let i = index">
+      <button
+        mat-icon-button
+        color="accent"
+        (click)="
+          startEdit(
+            i,
+            row.id,
+            row.name,
+            row.state,
+            row.created_at,
+            row.updated_at
+          )
+        "
+      >
+        <mat-icon aria-label="Edit">edit</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        color="accent"
+        (click)="deleteItem(i, row.id, row.name, row.state)"
+      >
+        <mat-icon aria-label="Delete">delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
+
+<div
+  class="no-results"
+  [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'"
+>
+  No results
+</div>
+
+<mat-paginator
+  #paginator
+  [length]="dataSource.filteredData.length"
+  [pageIndex]="0"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+>
+</mat-paginator>
+</div>
